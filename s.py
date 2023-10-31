@@ -2,20 +2,26 @@
 # import pyopencl as cl
 # import numpy as np
 
-# # Crear dos matrices de entrada y una matriz de salida
+# # Crias as matrizes
 # a = np.random.rand(100, 100).astype(np.float32) + 1
 # b = np.random.rand(100, 100).astype(np.float32) + 1 
 # res = np.empty_like(a)
+#Pega as plataformas disponiveis
 # plataformas = cl.get_platforms()
+#Cria um contexto
 # ctx = cl.create_some_context()
+#Cria a fila para as execuções
 # queue = cl.CommandQueue(ctx)
 
+#Especificar o tipo de acesso e as operações permitidas no buffer de memória
 # mf = cl.mem_flags
+#Buffer de memoria da matriz A , buffer somente leitura q copia os dados do CPU para a GPU
 # a_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=a)
 # b_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf=b)
+#Buffer da matriz resultante
 # dest_buf = cl.Buffer(ctx, mf.WRITE_ONLY, res.nbytes)
 
-# # Modificar el kernel para realizar la multiplicación de matrices
+# Código Kernel opencl C 
 # prg = cl.Program(ctx, """
 #     __kernel void matrix_multiply(__global const float *a,
 #     __global const float *b,
@@ -32,13 +38,13 @@
 #     }
 #     """).build()
 
-# # Obtener el tamaño de las matrices
+# Tamnaho das matrizes
 # N = a.shape[0]
 
-# # Ejecutar el kernel
+# Aqui executa o Kernel com os parametros
 # prg.matrix_multiply(queue, a.shape, None, a_buf, b_buf, dest_buf, np.int32(N))
 
-# # Copiar los resultados de vuelta a la matriz de salida
+# Copia o resultado para a matriz resultante
 # cl.enqueue_copy(queue, res, dest_buf)
 # print(plataformas)
 
